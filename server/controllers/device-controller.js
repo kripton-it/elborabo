@@ -6,6 +6,8 @@ const ApiError = require("../error/api-error");
 
 const { Device } = require("../models");
 
+const { getDevices } = require("../utils/device");
+
 class DeviceController {
   async create(request, response, next) {
     try {
@@ -32,7 +34,13 @@ class DeviceController {
   }
 
   async getAll(request, response) {
-    
+    const { brandId, typeId, limit = 9, page = 1 } = request.query;
+
+    const offset = limit * (page - 1);
+
+    const devices = await getDevices({ brandId, typeId, limit, offset });
+
+    return response.json(devices);
   }
 
   async getOneById(request, response) {
