@@ -44,7 +44,7 @@ Device.hasMany(BasketDevice);
 BasketDevice.belongsTo(Device);
 
 // У устройства много полей с информацией
-Device.hasMany(DeviceInfo);
+Device.hasMany(DeviceInfo, { as: "info" });
 // Поле с информацией принадлежит одному устройству
 DeviceInfo.belongsTo(Device);
 
