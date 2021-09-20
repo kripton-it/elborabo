@@ -4,7 +4,7 @@ const { v4 } = require("uuid");
 
 const ApiError = require("../error/api-error");
 
-const { Device } = require("../models");
+const { Device, DeviceInfo } = require("../models");
 
 const { getDevices } = require("../utils/device");
 
@@ -26,6 +26,16 @@ class DeviceController {
         typeId,
         img: filename
       });
+
+      if (info) {
+        JSON.parse(info).forEach(({ description, title }) => {
+          DeviceInfo.create({
+            description,
+            title,
+            deviceId: device.id
+          });
+        });
+      }
 
       return response.json(device);
     } catch (error) {
