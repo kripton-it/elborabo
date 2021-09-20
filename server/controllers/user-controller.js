@@ -35,8 +35,26 @@ class UserController {
     return response.json({ token });
   }
 
-  async login(request, response) {
-    
+  async login(request, response, next) {
+    const { email, password } = request.body;
+
+    const user = await User.findOne({
+      where: {
+        email
+      }
+    });
+
+    // Если нет пользователя с таким email
+    if (!user) return next(ApiError.badRequest("Пользователь с таким email не найден!"));
+
+    const isPasswordCorrect = bcrypt.compareSync(password, user.password);
+
+    // Если пароли не совпадают
+    if (!isPasswordCorrect) return next(ApiError.badRequest("Указан неверный пароль!"));
+
+    const token = generateJwt(user);
+
+    return response.json({ token });
   }
 
   async check(request, response, next) {
