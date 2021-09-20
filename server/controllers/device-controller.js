@@ -53,8 +53,22 @@ class DeviceController {
     return response.json(devices);
   }
 
-  async getOneById(request, response) {
-    
+  async getOneById(request, response, next) {
+    const { id } = request.params;
+
+    try {
+      const device = await Device.findOne({
+        where: { id },
+        include: [{
+          model: DeviceInfo,
+          as: "info"
+        }]
+      });
+
+      return response.json(device);
+    } catch (error) {
+      next(ApiError.badRequest(error.message));
+    }
   }
 }
 
