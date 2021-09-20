@@ -57,10 +57,11 @@ class UserController {
     return response.json({ token });
   }
 
-  async check(request, response, next) {
-    
+  async check(request, response) {
+    const { id, email, role } = request.user;
+    const token = generateJwt({ id, email, role });
 
-    response.json({ message: "Working"});
+    return response.json({ token });
   }
 }
 
